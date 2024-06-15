@@ -6,11 +6,11 @@ import (
 
 const alphabet = "ynAJfoSgdXHB5VasEMtcbPCr1uNZ4LG723ehWkvwYR6KpxjTm8iQUFqz9DOo"
 
-var alphabetLen = uint32(len(alphabet))
+var alphabetLen = uint64(len(alphabet))
 
-func Shorten(id uint32) string {
+func Shorten(id uint64) string {
 	var (
-		digits  []uint32
+		digits  []uint64
 		num     = id
 		builder strings.Builder
 	)
