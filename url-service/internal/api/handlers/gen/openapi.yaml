@@ -93,7 +93,7 @@ paths:
         - url
       summary: Redirect to actual URL
       description: Redirect to the original resource
-      operationId: redirectUrl
+      operationId: redirectURL
       parameters:
         - name: shortenedUrl
           in: path

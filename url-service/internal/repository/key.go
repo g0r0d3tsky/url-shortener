@@ -2,10 +2,12 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"url-service/url-service/internal/domain"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -42,14 +44,21 @@ func (s *StorageKey) CreateNewKey(ctx context.Context, key *domain.Key) error {
 	return nil
 }
 
-func (s *StorageURL) GetFreeKey(ctx context.Context) (*domain.Key, error) {
-	var key *domain.Key
-	if err := s.db.QueryRow(
+func (s *StorageKey) GetFreeKey(ctx context.Context) (*domain.Key, error) {
+	key := &domain.Key{}
+	err := s.db.QueryRow(
 		ctx, `
-				SELECT id, key_serial, encode, url_id FROM url_keys WHERE url_keys.url_id IS NULL
-			`).Scan(&key.ID, &key.Key, &key.Code, &key.UrlID); err != nil {
+            SELECT id, key_serial, encode, url_id FROM url_keys WHERE url_keys.url_id IS NULL
+        `).Scan(&key.ID, &key.Key, &key.Code, &key.UrlID)
+	if err != nil {
+		//fmt.Printf(" %v \n", err)
+		//str := err.Error()
+		//strRes := "sql: " + str
+		errors.Unwrap(err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
 		return nil, fmt.Errorf("get url: %w", err)
 	}
-
 	return key, nil
 }

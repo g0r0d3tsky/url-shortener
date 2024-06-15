@@ -35,3 +35,11 @@ func (s *KeyGenService) CreateNewKey(ctx context.Context, key *domain.Key) error
 	}
 	return nil
 }
+
+func (s *KeyGenService) GetFreeKey(ctx context.Context) (*domain.Key, error) {
+	key, err := s.repoKey.GetFreeKey(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("get free key: %w", err)
+	}
+	return key, nil
+}

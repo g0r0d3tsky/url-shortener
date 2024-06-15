@@ -32,8 +32,8 @@ func (s *StorageURL) CreateShort(ctx context.Context, url *domain.Url) (*uuid.UU
 	return &url.ID, nil
 }
 
-func (s *StorageURL) GetUrl(ctx context.Context, short string) (*domain.Url, error) {
-	var url *domain.Url
+func (s *StorageURL) GetURL(ctx context.Context, short string) (*domain.Url, error) {
+	url := &domain.Url{}
 	if err := s.db.QueryRow(
 		ctx, `
 		SELECT id, long_url, short_url, expires_at FROM url_data WHERE url_data.short_url= $1
