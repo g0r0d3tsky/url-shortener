@@ -64,8 +64,7 @@ func main() {
 
 	fs := http.FileServer(http.Dir("../../../swagger-ui/dist"))
 	r.Handle("/swagger-ui/*", http.StripPrefix("/swagger-ui/", fs))
-
-	handlers_gen.HandlerFromMux(handlerURL, r)
+	handlers_gen.HandlerFromMuxWithBaseURL(handlerURL, r, "/api/v1")
 
 	server := &http.Server{
 		Addr:    net.JoinHostPort(cfg.Host, cfg.Port),
