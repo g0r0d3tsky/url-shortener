@@ -16,7 +16,7 @@ func TestShorten(t *testing.T) {
 		testCases := []testCase{
 			{
 				id:       1024,
-				expected: "Mv",
+				expected: "Mf",
 			},
 			{
 				id:       0,
@@ -32,7 +32,7 @@ func TestShorten(t *testing.T) {
 
 	t.Run("is idempotent", func(t *testing.T) {
 		for i := 0; i < 100; i++ {
-			assert.Equal(t, "Mv", Shorten(1024))
+			assert.Equal(t, "Mf", Shorten(1024))
 		}
 	})
 }

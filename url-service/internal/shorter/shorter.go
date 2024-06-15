@@ -4,8 +4,7 @@ import (
 	"strings"
 )
 
-// fix: add Oo
-const alphabet = "ynAJfoSgdXHB5VasEMtcbPCr1uNZ4LG723ehWkvwYR6KpxjTm8iQUFqz9D"
+const alphabet = "ynAJfoSgdXHB5VasEMtcbPCr1uNZ4LG723ehWkvwYR6KpxjTm8iQUFqz9DOo"
 
 var alphabetLen = uint32(len(alphabet))
 
