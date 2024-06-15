@@ -1,15 +1,16 @@
-CREATE TABLE "data" (
-  "id" uuid PRIMARY KEY,
-  "longUrl" varchar(3000),
-  "shortUrl" varchar,
-  "expiresAt" timestamp without time zone
+CREATE TABLE url_data (
+                          id uuid PRIMARY KEY,
+                          long_url varchar(3000),
+                          short_url varchar(255),
+                          expires_at timestamp with time zone
 );
 
-CREATE TABLE "keys" (
-  "id" uuid PRIMARY KEY,
-  "key" serial,
-  "encode" varchar,
-  "urlID" uuid
+CREATE TABLE url_keys (
+                          id uuid PRIMARY KEY,
+                          key_serial serial,
+                          encode varchar(255),
+                          url_id uuid,
+                          FOREIGN KEY (url_id) REFERENCES url_data (id) ON DELETE SET NULL
 );
 
-ALTER TABLE "keys" ADD FOREIGN KEY ("urlID") REFERENCES "data" ("id");
+CREATE SEQUENCE key_serial_seq OWNED BY url_keys.key_serial;

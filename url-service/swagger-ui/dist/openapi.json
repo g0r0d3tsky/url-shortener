@@ -1,0 +1,206 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Url-shortener",
+    "description": "This is a sample URL Shortener service based on the OpenAPI 3.0 specification. With this service, you can create shortened versions of long URLs to make them more manageable and shareable.\n\nThe URL Shortener API allows you to programmatically generate short URLs for any long URL. To create a short URL, send a POST request to the `/data/shorten` endpoint with the original URL as the input. The API will return a shortened URL in the response.\n\nSome useful links:\n- [repository of the project](https://github.com/g0r0d3tsky/url-shortener)\n- [The source API definition](https://github.com/g0r0d3tsky/url-shortener) TODO",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "gorodetskiy39@gmail.com"
+    },
+    "license": {
+      "name": "TODO",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "url",
+      "description": "Everything for url`s"
+    }
+  ],
+  "paths": {
+    "/data/shorten": {
+      "post": {
+        "tags": [
+          "url"
+        ],
+        "summary": "Create short url representation",
+        "description": "Creating short url",
+        "operationId": "createURL",
+        "requestBody": {
+          "description": "Create short url for long url",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "originalUrl": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "originalUrl"
+                ],
+                "example": {
+                  "originalUrl": "https://www.example.com/long-url"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "originalUrl": {
+                      "type": "string"
+                    },
+                    "shortenedUrl": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "example": {
+                    "shortenedUrl": "http://localhost:8080/abc",
+                    "expiresAt": "2024-06-30T23:59:59Z"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid originalURL supplied",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation exception",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable - The server is currently unable to handle the request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{shortenedUrl}": {
+      "get": {
+        "tags": [
+          "url"
+        ],
+        "summary": "Redirect to actual URL",
+        "description": "Redirect to the original resource",
+        "operationId": "redirectURL",
+        "parameters": [
+          {
+            "name": "shortenedUrl",
+            "in": "path",
+            "description": "Shortened URL to be considered for filtering",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "301": {
+            "description": "Redirect"
+          },
+          "404": {
+            "description": "Not Found - Shortened URL not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Unexpected server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultErrorBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DefaultErrorBody": {
+        "type": "object",
+        "properties": {
+          "errorID": {
+            "type": "string"
+          },
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "code",
+          "message"
+        ],
+        "example": {
+          "errorID": "uuid",
+          "errorCode": "errorCode",
+          "errorMessage": "Error message"
+        }
+      }
+    }
+  }
+}

@@ -40,7 +40,7 @@ type ServerInterface interface {
 	CreateURL(w http.ResponseWriter, r *http.Request)
 	// Redirect to actual URL
 	// (GET /{shortenedUrl})
-	RedirectUrl(w http.ResponseWriter, r *http.Request, shortenedUrl string)
+	RedirectURL(w http.ResponseWriter, r *http.Request, shortenedUrl string)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -55,7 +55,7 @@ func (_ Unimplemented) CreateURL(w http.ResponseWriter, r *http.Request) {
 
 // Redirect to actual URL
 // (GET /{shortenedUrl})
-func (_ Unimplemented) RedirectUrl(w http.ResponseWriter, r *http.Request, shortenedUrl string) {
+func (_ Unimplemented) RedirectURL(w http.ResponseWriter, r *http.Request, shortenedUrl string) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -83,8 +83,8 @@ func (siw *ServerInterfaceWrapper) CreateURL(w http.ResponseWriter, r *http.Requ
 	handler.ServeHTTP(w, r.WithContext(ctx))
 }
 
-// RedirectUrl operation middleware
-func (siw *ServerInterfaceWrapper) RedirectUrl(w http.ResponseWriter, r *http.Request) {
+// RedirectURL operation middleware
+func (siw *ServerInterfaceWrapper) RedirectURL(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	var err error
@@ -99,7 +99,7 @@ func (siw *ServerInterfaceWrapper) RedirectUrl(w http.ResponseWriter, r *http.Re
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.RedirectUrl(w, r, shortenedUrl)
+		siw.Handler.RedirectURL(w, r, shortenedUrl)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -226,7 +226,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 		r.Post(options.BaseURL+"/data/shorten", wrapper.CreateURL)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/{shortenedUrl}", wrapper.RedirectUrl)
+		r.Get(options.BaseURL+"/{shortenedUrl}", wrapper.RedirectURL)
 	})
 
 	return r
@@ -252,10 +252,10 @@ var swaggerSpec = []string{
 	"blnHj6aBLk8OiX8v/iHGU7fz1SuYd0qh96wWGx5y6OffWNzvCZeiEN9l2+mcDaM5O5rLJ3CcmzvZ6HKj",
 	"iCxvvuOUWEY80+mT4vmd0cTggPcK3ViXF09el4DEE4LFDAn6x8gEFgbvHaqAZRytSBBfGz3E2ZNCHGQW",
 	"FkbeSd3EyTyJ82tApj2ojghNaNbQmWgQLNTSlA0OEywKXaSs79pW0vqUPBA6Qo8m9DRNRJCVZ+Fhubhi",
-	"5+xhtyce+XgVnhDij1hqQrUZ1ZtBTNhPtiNdHj0WUZmcJNliQOL0h8Hne0M6WLhBUNZ4XSJhGUVuqZuA",
-	"sUv53SaKOElEMg7AvcY+1MFk5+4OO/7qQCNn+bN/Pnzf58+flCzvbYBfbWdKmMB+nYwNsOSd/0Wb7RF1",
-	"l01Sha5/0B3zk51ilJ41/fsmk05nd88E391gf3hhZ3dI61Dzw4HJ01Fz7bdkiXP76vHvAAAA///EDRqN",
-	"GQ0AAA==",
+	"5+xhtyce+XgVnhDij1hqQrUZ1ZtBTNhPtiNdHj16ZXaSZIsBidMfBp/vDelg4QZBWeN1iYRlFLmlbgLG",
+	"LuV3myjiJBHJOAD3GvtQB5Oduzvs+KsDjZzlz/758H2fP39Ssry3AX61nSlhAvt1MjbAknf+F222R9Rd",
+	"NkkVuv5Bd8xPdopRetb075tMOp3dPRN8d4P94YWd3SGtQ80PByZPR82135Ilzu2rx78DAAD//zPx+bwZ",
+	"DQAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
