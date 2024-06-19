@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"net"
 
 	"github.com/caarlos0/env/v9"
 )
@@ -16,22 +15,10 @@ type Config struct {
 		Database string `env:"POSTGRES_DB,notEmpty"`
 	}
 	Kafka struct {
-		BrokerList []string `env:"KAFKA_BROKERS,notEmpty"`
+		BrokerList string `env:"KAFKA_BROKERS,notEmpty"`
+		GroupID    string `env:"KAFKA_GROUP_ID,notEmpty"`
+		Topics     string `env:"KAFKA_TOPICS,notEmpty"`
 	}
-	Redis struct {
-		Host     string `env:"REDIS_HOST,notEmpty"`
-		Port     string `env:"REDIS_PORT,notEmpty"`
-		Database string `env:"REDIS_DB,notEmpty"`
-		Key      string `env:"REDIS_KEY"`
-	}
-
-	Host       string `env:"HOST"`
-	Port       string `env:"PORT"`
-	KafkaTopic string `env:"KAFKA_TOPIC"`
-}
-
-func (c *Config) ServerAddress() string {
-	return net.JoinHostPort(c.Host, c.Port)
 }
 
 func (c *Config) PostgresDSN() string {
@@ -40,15 +27,8 @@ func (c *Config) PostgresDSN() string {
 	)
 }
 
-func (c *Config) RedisDSN() string {
-	return fmt.Sprintf("redis://%s:%s/%s",
-		c.Redis.Host, c.Redis.Port, c.Redis.Database,
-	)
-}
-
 func Read() (*Config, error) {
 	var config Config
-
 	if err := env.Parse(&config); err != nil {
 		return nil, fmt.Errorf("parse config: %w", err)
 	}

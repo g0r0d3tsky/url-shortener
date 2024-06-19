@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 	"fmt"
+	"storage-service/internal/config"
 	"time"
-	"url-service/url-service/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

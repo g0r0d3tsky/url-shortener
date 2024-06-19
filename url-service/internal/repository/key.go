@@ -51,9 +51,6 @@ func (s *StorageKey) GetFreeKey(ctx context.Context) (*domain.Key, error) {
             SELECT id, key_serial, encode, url_id FROM url_keys WHERE url_keys.url_id IS NULL
         `).Scan(&key.ID, &key.Key, &key.Code, &key.UrlID)
 	if err != nil {
-		//fmt.Printf(" %v \n", err)
-		//str := err.Error()
-		//strRes := "sql: " + str
 		errors.Unwrap(err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
@@ -61,4 +58,12 @@ func (s *StorageKey) GetFreeKey(ctx context.Context) (*domain.Key, error) {
 		return nil, fmt.Errorf("get url: %w", err)
 	}
 	return key, nil
+}
+
+func (s *StorageKey) UpdateKey(ctx context.Context, key *domain.Key) error {
+	if _, err := s.db.Exec(ctx,
+		`UPDATE url_keys SET url_id = $1 WHERE id = $2`, key.UrlID, key.ID); err != nil {
+		return fmt.Errorf("update url: %w", err)
+	}
+	return nil
 }

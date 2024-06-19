@@ -12,10 +12,3 @@ type Url struct {
 	ShortURL    string
 	VisitedAT   time.Time
 }
-
-type Key struct {
-	ID    uuid.UUID
-	UrlID uuid.UUID
-	Key   uint64
-	Code  string
-}
