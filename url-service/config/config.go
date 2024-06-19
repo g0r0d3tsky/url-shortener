@@ -15,8 +15,19 @@ type Config struct {
 		Password string `env:"POSTGRES_PASSWORD,notEmpty"`
 		Database string `env:"POSTGRES_DB,notEmpty"`
 	}
-	Host string `env:"HOST"`
-	Port string `env:"PORT"`
+	Kafka struct {
+		BrokerList []string `env:"KAFKA_BROKERS,notEmpty"`
+	}
+	Redis struct {
+		Host     string `env:"REDIS_HOST,notEmpty"`
+		Port     string `env:"REDIS_PORT,notEmpty"`
+		Database string `env:"REDIS_DB,notEmpty"`
+		Key      string `env:"REDIS_KEY"`
+	}
+
+	Host       string `env:"HOST"`
+	Port       string `env:"PORT"`
+	KafkaTopic string `env:"KAFKA_TOPIC"`
 }
 
 func (c *Config) ServerAddress() string {
@@ -28,6 +39,13 @@ func (c *Config) PostgresDSN() string {
 		c.Postgres.Host, c.Postgres.Port, c.Postgres.User, c.Postgres.Password, c.Postgres.Database,
 	)
 }
+
+func (c *Config) RedisDSN() string {
+	return fmt.Sprintf("redis://%s:%s/%s",
+		c.Redis.Host, c.Redis.Port, c.Redis.Database,
+	)
+}
+
 func Read() (*Config, error) {
 	var config Config
 

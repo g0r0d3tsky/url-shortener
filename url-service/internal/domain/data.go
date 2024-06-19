@@ -10,7 +10,7 @@ type Url struct {
 	ID          uuid.UUID
 	OriginalURL string
 	ShortURL    string
-	ExpiresAT   time.Time
+	VisitedAT   time.Time
 }
 
 type Key struct {

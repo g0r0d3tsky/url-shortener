@@ -2,18 +2,11 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"time"
 	"url-service/url-service/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-)
-
-// todo: fix
-var (
-	ErrURLNotFound    = errors.New("url not found")
-	ErrDuplicateLogin = errors.New("duplicate login")
 )
 
 func Connect(c *config.Config) (*pgxpool.Pool, error) {

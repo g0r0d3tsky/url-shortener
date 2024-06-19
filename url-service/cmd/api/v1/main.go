@@ -14,6 +14,8 @@ import (
 	"url-service/url-service/config"
 	"url-service/url-service/internal/api/handlers"
 	handlers_gen "url-service/url-service/internal/api/handlers/gen"
+	"url-service/url-service/internal/cache"
+	"url-service/url-service/internal/kafka"
 	"url-service/url-service/internal/repository"
 	"url-service/url-service/internal/usecase"
 
@@ -45,11 +47,42 @@ func main() {
 		}
 	}()
 
+	producer, err := kafka.New(cfg)
+	if err != nil {
+		slog.Error("kafka connect", err)
+		return
+	}
+
+	defer func() {
+		if producer != nil {
+			err := producer.Close()
+			if err != nil {
+				slog.Error("closing producer", err)
+				return
+			}
+		}
+	}()
+
+	redis, err := cache.Connect(cfg)
+	defer func() {
+		if redis != nil {
+			err := redis.Close()
+			if err != nil {
+				slog.Error("closing redis", err)
+				return
+			}
+		}
+	}()
+	if err != nil {
+		slog.Error("redis connect", err)
+	}
+
 	storageURL := repository.NewStorageURL(dbPool)
 	storageKey := repository.NewStorageKey(dbPool)
 
-	serviceKey := usecase.NewKeyGenService(&storageKey)
-	serviceURL := usecase.NewURLService(&storageURL, serviceKey)
+	cacheService := cache.NewCache(redis, cfg.Redis.Key)
+
+	serviceURL := usecase.NewURLService(&storageURL, &storageKey, cacheService, producer, cfg.KafkaTopic)
 
 	handlerURL := handlers.NewAPIHandler(serviceURL)
 

@@ -10,6 +10,7 @@ type KeyRepo interface {
 	GetNextKeyFromSequence(ctx context.Context) (*uint64, error)
 	CreateNewKey(ctx context.Context, key *domain.Key) error
 	GetFreeKey(ctx context.Context) (*domain.Key, error)
+	UpdateKey(ctx context.Context, key *domain.Key) error
 }
 
 type KeyGenService struct {
@@ -42,4 +43,12 @@ func (s *KeyGenService) GetFreeKey(ctx context.Context) (*domain.Key, error) {
 		return nil, fmt.Errorf("get free key: %w", err)
 	}
 	return key, nil
+}
+
+func (s *KeyGenService) UpdateKey(ctx context.Context, key *domain.Key) error {
+	err := s.repoKey.UpdateKey(ctx, key)
+	if err != nil {
+		return fmt.Errorf("update key: %w", err)
+	}
+	return nil
 }
