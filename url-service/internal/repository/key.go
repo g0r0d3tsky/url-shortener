@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"url-service/url-service/internal/domain"
+	"url-service/internal/domain"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"

@@ -1,11 +1,11 @@
 package cache
 
 import (
+	"cleaner-service/config"
 	"context"
 	"fmt"
 	"log/slog"
 	"time"
-	"url-service/config"
 
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"

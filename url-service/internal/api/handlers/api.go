@@ -4,8 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-	"url-service/url-service/internal/api/handlers/model"
-	"url-service/url-service/internal/domain"
+	"time"
+	"url-service/internal/api/handlers/model"
+	"url-service/internal/domain"
+	"url-service/internal/metrics"
 )
 
 type URLService interface {
@@ -23,43 +25,68 @@ func NewAPIHandler(service URLService) *APIHandler {
 
 // (POST /data/shorten)
 func (h *APIHandler) CreateURL(w http.ResponseWriter, r *http.Request) {
+	start := time.Now()
+
 	// Parse request body
 	var input model.RequestInput
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		duration := time.Since(start)
+		statusCode := http.StatusBadRequest
+		metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 		return
 	}
+
 	// Create short URL
 	shortURL, err := h.service.CreateShortURL(r.Context(), input.OriginalURL)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		duration := time.Since(start)
+		statusCode := http.StatusInternalServerError
+		metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 		return
 	}
 
-	// Set response headers
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	// Return short URL
 	if err := json.NewEncoder(w).Encode(shortURL); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		duration := time.Since(start)
+		statusCode := http.StatusInternalServerError
+		metrics.ObserveRequest(duration, statusCode, r.URL.Path)
+
 		return
 	}
+
+	duration := time.Since(start)
+	statusCode := http.StatusOK
+	metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 }
 
 // Redirect to actual URL
 // (GET /{shortenedUrl})
 func (h *APIHandler) RedirectURL(w http.ResponseWriter, r *http.Request, shortenedUrl string) {
 	// Get actual URL
+	start := time.Now()
+
 	url, err := h.service.GetURL(r.Context(), shortenedUrl)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		duration := time.Since(start)
+		statusCode := http.StatusInternalServerError
+		metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 		return
 	}
 
 	// Redirect to actual URL
 	http.Redirect(w, r, url.OriginalURL, http.StatusMovedPermanently)
+	duration := time.Since(start)
+	statusCode := http.StatusMovedPermanently
+	metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 }
 
 //type APIHandler struct {

@@ -9,18 +9,23 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"regexp"
 	"syscall"
 	"time"
-	"url-service/url-service/config"
-	"url-service/url-service/internal/api/handlers"
-	handlers_gen "url-service/url-service/internal/api/handlers/gen"
-	"url-service/url-service/internal/cache"
-	"url-service/url-service/internal/kafka"
-	"url-service/url-service/internal/repository"
-	"url-service/url-service/internal/usecase"
+	"url-service/config"
+	"url-service/internal/api/handlers"
+	handlers_gen "url-service/internal/api/handlers/gen"
+	"url-service/internal/cache"
+	"url-service/internal/kafka"
+	request_metrics "url-service/internal/metrics"
+	"url-service/internal/repository"
+	"url-service/internal/usecase"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func main() {
@@ -86,17 +91,26 @@ func main() {
 
 	handlerURL := handlers.NewAPIHandler(serviceURL)
 
-	//swagger, err := handlers_gen.GetSwagger()
-	//if err != nil {
-	//	logger.Error("failed to get swagger", slog.String("msg", err.Error()))
-	//}
-
 	r := chi.NewRouter()
-
-	//r.Use(middleware.OapiRequestValidator(swagger))
 
 	fs := http.FileServer(http.Dir("../../../swagger-ui/dist"))
 	r.Handle("/swagger-ui/*", http.StripPrefix("/swagger-ui/", fs))
+
+	reg := prometheus.NewRegistry()
+
+	reg.MustRegister(collectors.NewBuildInfoCollector())
+	reg.MustRegister(collectors.NewGoCollector(
+		collectors.WithGoCollectorRuntimeMetrics(collectors.GoRuntimeMetricsRule{Matcher: regexp.MustCompile("/.*")}),
+	))
+	reg.MustRegister(request_metrics.RequestMetrics)
+
+	r.Handle("/metrics", promhttp.HandlerFor(
+		reg,
+		promhttp.HandlerOpts{
+			// Opt into OpenMetrics to support exemplars.
+			EnableOpenMetrics: true,
+		},
+	))
 	handlers_gen.HandlerFromMuxWithBaseURL(handlerURL, r, "/api/v1")
 
 	server := &http.Server{

@@ -1,11 +1,11 @@
 package cache
 
 import (
+	"cleaner-service/internal/domain"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"url-service/internal/domain"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -54,22 +54,4 @@ func (c Cache) GetURL(ctx context.Context, shortURL string) (*domain.Url, error)
 		VisitedAT:   urlRedis.VisitedAT,
 	}
 	return urlDomain, nil
-}
-
-func (c Cache) SetURL(ctx context.Context, url *domain.Url) error {
-	urlRedis := &Url{
-		ID:          url.ID,
-		OriginalURL: url.OriginalURL,
-		ShortURL:    url.ShortURL,
-		VisitedAT:   url.VisitedAT,
-	}
-
-	urlJson, err := json.Marshal(urlRedis)
-
-	err = c.redis.HSet(ctx, c.key, urlRedis.ShortURL, urlJson).Err()
-	if err != nil {
-		return fmt.Errorf("store url in cache: %w", err)
-	}
-
-	return nil
 }

@@ -1,10 +1,10 @@
 package repository
 
 import (
+	"cleaner-service/config"
 	"context"
 	"fmt"
 	"time"
-	"url-service/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )

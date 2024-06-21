@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"os"
 	"os/signal"
-	"storage-service/internal/config"
+	"storage-service/config"
 	"storage-service/internal/handlers"
 	"storage-service/internal/kafka"
 	"storage-service/internal/repository"

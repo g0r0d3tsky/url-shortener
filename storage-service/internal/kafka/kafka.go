@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
-	"storage-service/internal/config"
+	"storage-service/config"
 	"strings"
 	"sync"
 
