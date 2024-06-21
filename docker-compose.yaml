@@ -1,10 +1,57 @@
 version: '3.1'
 services:
+#  url_service:
+#    build:
+#      context:    ./url-service
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - url-service/cmd/api/v1/.env
+#    depends_on:
+#      - zoo1
+#      - kafka1
+#      - postgres
+#      - redis
+#    networks:
+#      - internal
+#
+#  storage_service:
+#      build:
+#        context: ./storage-service
+#        dockerfile: Dockerfile
+#      env_file:
+#        - storage-service/cmd/.env
+#      depends_on:
+#        - zoo1
+#        - kafka1
+#        - postgres
+#        - redis
+#        - url_service
+#      networks:
+#        - internal
+#
+#  cleaner_service:
+#    build:
+#      context: ./cleaner-service
+#      dockerfile: Dockerfile
+#    env_file:
+#      - cleaner-service/cmd/.env
+#    depends_on:
+#      - postgres
+#      - zoo1
+#      - kafka1
+#      - redis
+#      - url_service
+#    networks:
+#      - internal
+
   postgres:
     container_name: url_db
     image: postgres:latest
     ports:
       - 5432:5432
+    user: postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -53,6 +100,12 @@ services:
       KAFKA_JMX_HOSTNAME: ${DOCKER_HOST_IP:-127.0.0.1}
       KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.authorizer.AclAuthorizer
       KAFKA_ALLOW_EVERYONE_IF_NO_ACL_FOUND: "true"
+    healthcheck:
+      test: kafka-topics --bootstrap-server kafka1:9092 --list
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
     depends_on:
       - zoo1
     networks:
@@ -71,6 +124,22 @@ services:
     networks:
       - internal
 
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "19090:9090"
+
+  grafana:
+    image: grafana/grafana-oss:9.4.3
+    ports:
+      - "13000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
 
 networks:
   internal:
+
+volumes:
+  grafana-data:

@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"url-service/url-service/internal/domain"
+	"url-service/internal/domain"
 )
 
 type KeyRepo interface {

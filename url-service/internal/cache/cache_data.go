@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"url-service/url-service/internal/domain"
+	"url-service/internal/domain"
 
 	"github.com/redis/go-redis/v9"
 )

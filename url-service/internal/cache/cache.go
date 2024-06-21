@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"time"
-	"url-service/url-service/config"
+	"url-service/config"
 
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"

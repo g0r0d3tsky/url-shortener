@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"url-service/url-service/internal/domain"
-	"url-service/url-service/internal/kafka"
-	"url-service/url-service/internal/shorter"
+	"url-service/internal/domain"
+	"url-service/internal/kafka"
+	"url-service/internal/shorter"
 
 	"github.com/google/uuid"
 )

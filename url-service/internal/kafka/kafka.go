@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"log/slog"
 	"time"
-	"url-service/url-service/config"
-	"url-service/url-service/internal/domain"
+	"url-service/config"
+	"url-service/internal/domain"
 
 	"github.com/IBM/sarama"
 )

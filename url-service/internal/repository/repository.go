@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"time"
-	"url-service/url-service/config"
+	"url-service/config"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
