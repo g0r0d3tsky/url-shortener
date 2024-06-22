@@ -11,6 +11,7 @@ import (
 	"github.com/IBM/sarama"
 )
 
+//go:generate mockgen -source=handler.go -destination=mocks/handlers_mock.go
 type Service interface {
 	CreateURL(ctx context.Context, message *domain.Url) error
 }
