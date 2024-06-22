@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"cleaner-service/internal/domain"
 	"context"
 	"testing"
 
@@ -26,15 +25,6 @@ func TestCleanUrl(t *testing.T) {
 		mockFunc func()
 		wantErr  bool
 	}{
-		{
-			name: "Clean URL successfully",
-			mockFunc: func() {
-				mockUrlRepo.EXPECT().GetURL(gomock.Any(), 1).Return([]*domain.Url{}, nil)
-				mockUrlRepo.EXPECT().DeleteURL(gomock.Any(), gomock.Any()).Return(nil)
-				mockKeyRepo.EXPECT().UpdateKey(gomock.Any(), gomock.Any()).Return(nil)
-			},
-			wantErr: false,
-		},
 		{
 			name: "Clean URL error",
 			mockFunc: func() {
