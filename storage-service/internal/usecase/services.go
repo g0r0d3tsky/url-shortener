@@ -6,6 +6,7 @@ import (
 	"storage-service/internal/domain"
 )
 
+//go:generate mockgen -source=services.go -destination=mocks/service_mock.go
 type Repository interface {
 	CreateShort(ctx context.Context, url *domain.Url) error
 	UpdateURL(ctx context.Context, url *domain.Url) error

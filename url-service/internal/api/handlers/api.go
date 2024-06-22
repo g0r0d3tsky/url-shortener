@@ -10,6 +10,7 @@ import (
 	"url-service/internal/metrics"
 )
 
+//go:generate mockgen -source=api.go -destination=mocks/handlers_mock.go
 type URLService interface {
 	CreateShortURL(ctx context.Context, originalUrl string) (*domain.Url, error)
 	GetURL(ctx context.Context, short string) (*domain.Url, error)
@@ -88,8 +89,3 @@ func (h *APIHandler) RedirectURL(w http.ResponseWriter, r *http.Request, shorten
 	statusCode := http.StatusMovedPermanently
 	metrics.ObserveRequest(duration, statusCode, r.URL.Path)
 }
-
-//type APIHandler struct {
-//	*MyHandler1
-//	*MyHandler2
-//}

@@ -9,7 +9,7 @@ import (
 func TestShorten(t *testing.T) {
 	t.Run("returns an alphanumeric short identifier", func(t *testing.T) {
 		type testCase struct {
-			id       uint32
+			id       uint64
 			expected string
 		}
 

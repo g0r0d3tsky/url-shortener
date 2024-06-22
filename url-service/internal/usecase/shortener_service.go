@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"time"
 	"url-service/internal/domain"
-	"url-service/internal/kafka"
 	"url-service/internal/shorter"
 
 	"github.com/google/uuid"
 )
 
+//go:generate mockgen -source=shortener_service.go -destination=mocks/service_mock.go
 type UrlRepo interface {
 	GetURL(ctx context.Context, short string) (*domain.Url, error)
 }
@@ -24,6 +24,13 @@ type Broker interface {
 	Push(topic string, message *domain.Url) error
 }
 
+type KeyRepo interface {
+	GetNextKeyFromSequence(ctx context.Context) (*uint64, error)
+	CreateNewKey(ctx context.Context, key *domain.Key) error
+	GetFreeKey(ctx context.Context) (*domain.Key, error)
+	UpdateKey(ctx context.Context, key *domain.Key) error
+}
+
 type URLService struct {
 	repoUrl    UrlRepo
 	repoKey    KeyRepo
@@ -32,7 +39,7 @@ type URLService struct {
 	kafkaTopic string
 }
 
-func NewURLService(repoUrl UrlRepo, keyRepo KeyRepo, cache Cache, producer *kafka.Producer, kafkaTopic string) *URLService {
+func NewURLService(repoUrl UrlRepo, keyRepo KeyRepo, cache Cache, producer Broker, kafkaTopic string) *URLService {
 	return &URLService{repoUrl: repoUrl, repoKey: keyRepo, cache: cache, kafka: producer, kafkaTopic: kafkaTopic}
 }
 

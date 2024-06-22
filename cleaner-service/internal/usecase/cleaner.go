@@ -6,6 +6,7 @@ import (
 	"fmt"
 )
 
+//go:generate mockgen -source=cleaner.go -destination=mocks/cleaner_mock.go
 type UrlRepo interface {
 	GetURL(ctx context.Context, monthAmount int) ([]*domain.Url, error)
 	DeleteURL(ctx context.Context, url *domain.Url) error
@@ -51,7 +52,7 @@ func (us *URLService) CleanURL(ctx context.Context) error {
 			continue
 		}
 
-		if urlCache.VisitedAT.IsZero() || (!url.VisitedAT.IsZero() && urlCache.VisitedAT.Before(url.VisitedAT)) {
+		if urlCache.VisitedAT.IsZero() || (!url.VisitedAT.IsZero() && urlCache.VisitedAT.After(url.VisitedAT)) {
 			continue
 		}
 		if err := us.repoUrl.DeleteURL(ctx, url); err != nil {

@@ -57,6 +57,9 @@ func main() {
 	cleanerService := usecase.NewURLService(&storageURL, &storageKey, cacheService, cfg.MonthAmount)
 
 	err = cleanerService.CleanURL(context.Background())
+	if err != nil {
+		slog.Error("clean url", err)
+	}
 
 	s, err := gocron.NewScheduler()
 	if err != nil {

@@ -35,6 +35,7 @@ func NewCache(client Redis, key string) Cache {
 func (c Cache) GetURL(ctx context.Context, shortURL string) (*domain.Url, error) {
 	url, err := c.redis.HGet(ctx, c.key, shortURL).Result()
 	if errors.Is(err, redis.Nil) {
+		//nolint:nilnil // no problems here
 		return nil, nil
 	} else if err != nil {
 		return nil, fmt.Errorf("get url from cache: %w", err)
