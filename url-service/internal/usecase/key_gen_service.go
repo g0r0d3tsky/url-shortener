@@ -6,13 +6,6 @@ import (
 	"url-service/internal/domain"
 )
 
-type KeyRepo interface {
-	GetNextKeyFromSequence(ctx context.Context) (*uint64, error)
-	CreateNewKey(ctx context.Context, key *domain.Key) error
-	GetFreeKey(ctx context.Context) (*domain.Key, error)
-	UpdateKey(ctx context.Context, key *domain.Key) error
-}
-
 type KeyGenService struct {
 	repoKey KeyRepo
 }

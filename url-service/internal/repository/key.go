@@ -26,7 +26,7 @@ func (s *StorageKey) GetNextKeyFromSequence(ctx context.Context) (*uint64, error
 	var key uint64
 	err := s.db.QueryRow(ctx, "SELECT nextval('key_serial_seq')").Scan(&key)
 	if err != nil {
-		return nil, fmt.Errorf("get next key from sequence: %v", err)
+		return nil, fmt.Errorf("get next key from sequence: %w", err)
 	}
 
 	return &key, nil
@@ -51,8 +51,8 @@ func (s *StorageKey) GetFreeKey(ctx context.Context) (*domain.Key, error) {
             SELECT id, key_serial, encode, url_id FROM url_keys WHERE url_keys.url_id IS NULL
         `).Scan(&key.ID, &key.Key, &key.Code, &key.UrlID)
 	if err != nil {
-		errors.Unwrap(err)
 		if errors.Is(err, pgx.ErrNoRows) {
+			//nolint:nilnil //no problems here
 			return nil, nil
 		}
 		return nil, fmt.Errorf("get url: %w", err)
