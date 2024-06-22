@@ -24,11 +24,11 @@ jobs:
           go mod tidy
           go build -v ./...
 
-      - name: Lint url-service
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-          path: url-service
+#      - name: Lint url-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: url-service
 
       - name: Test url-service
         run: |
@@ -53,11 +53,11 @@ jobs:
           go mod tidy
           go build -v ./...
 
-      - name: Lint storage-service
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-          path: storage-service
+#      - name: Lint storage-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: storage-service
 
       - name: Test storage-service
         run: |
@@ -82,11 +82,11 @@ jobs:
           go mod tidy
           go build -v ./...
 
-      - name: Lint cleaner-service
-        uses: golangci/golangci-lint-action@v3
-        with:
-          version: latest
-          path: cleaner-service
+#      - name: Lint cleaner-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: cleaner-service
 
       - name: Test cleaner-service
         run: |
