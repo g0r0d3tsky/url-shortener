@@ -39,3 +39,10 @@ erDiagram
         url_id uuid
     }
 ```
+## Реализация
+1. API Documentation first: OpenAPI 3.0
+![API](src/api.png)
+2. Prometheus metrics
+![Prometheus](src/prometheus.png)
+3. Grafana Dashboard
+![Grafana](src/grafana.png)

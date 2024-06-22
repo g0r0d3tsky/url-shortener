@@ -2,14 +2,10 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Url-shortener",
-    "description": "This is a sample URL Shortener service based on the OpenAPI 3.0 specification. With this service, you can create shortened versions of long URLs to make them more manageable and shareable.\n\nThe URL Shortener API allows you to programmatically generate short URLs for any long URL. To create a short URL, send a POST request to the `/data/shorten` endpoint with the original URL as the input. The API will return a shortened URL in the response.\n\nSome useful links:\n- [repository of the project](https://github.com/g0r0d3tsky/url-shortener)\n- [The source API definition](https://github.com/g0r0d3tsky/url-shortener) TODO",
+    "description": "This is a sample URL Shortener service based on the OpenAPI 3.0 specification. With this service, you can create shortened versions of long URLs to make them more manageable and shareable.\n\nThe URL Shortener API allows you to programmatically generate short URLs for any long URL. To create a short URL, send a POST request to the `/data/shorten` endpoint with the original URL as the input. The API will return a shortened URL in the response.\n\nSome useful links:\n- [repository of the project](https://github.com/g0r0d3tsky/url-shortener)\n- [The source API definition](https://github.com/g0r0d3tsky/url-shortener)",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "gorodetskiy39@gmail.com"
-    },
-    "license": {
-      "name": "TODO",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "version": "0.0.1"
   },
