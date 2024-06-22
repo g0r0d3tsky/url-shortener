@@ -1,0 +1,95 @@
+name: Go
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build_service1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 'stable'
+
+      - name: Build url-service
+        run: |
+          cd url-service
+          go mod tidy
+          go build -v ./...
+
+#      - name: Lint url-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: url-service
+
+      - name: Test url-service
+        run: |
+          cd url-service
+          go mod tidy
+          go test -v -race -coverpkg=./... ./...
+
+  build_service2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 'stable'
+
+      - name: Build storage-service
+        run: |
+          cd storage-service
+          go mod tidy
+          go build -v ./...
+
+#      - name: Lint storage-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: storage-service
+
+      - name: Test storage-service
+        run: |
+          cd storage-service
+          go mod tidy
+          go test -v -race -coverpkg=./... ./...
+
+  build_service3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 'stable'
+
+      - name: Build cleaner-service
+        run: |
+          cd cleaner-service
+          go mod tidy
+          go build -v ./...
+
+#      - name: Lint cleaner-service
+#        uses: golangci/golangci-lint-action@v3
+#        with:
+#          version: latest
+#          path: cleaner-service
+
+      - name: Test cleaner-service
+        run: |
+          cd cleaner-service
+          go mod tidy
+          go test -v -race -coverpkg=./... ./...
