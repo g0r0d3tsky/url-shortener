@@ -23,19 +23,19 @@
 ![Architecture](src/arch.jpg)
 
         ### Database Schema
-        ```mermaid
-        erDiagram
-        url_data {
+```mermaid
+erDiagram
+    url_data {
         uuid id
         string short_url
         string long_url
         datetime visited_at
-        }
+    }
 
-        keys{
+    keys{
         uuid id
         serial key
         encode string
         url_id uuid
-        }
-        ```
+    }
+```
